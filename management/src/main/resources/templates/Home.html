@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<title>Home</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- bootstrap css -->
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+<link href="https://fonts.googleapis.com/css?family=Montserrat"
+	rel="stylesheet">
+<link rel="stylesheet" href="/css/navy_bar.css" type="text/css">
+<link rel="stylesheet" href="/css/article.css" type="text/css">
+<link rel="stylesheet" href="/css/footer.css" type="text/css">
+<!-- script -->
+<script
+	src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+<script src="js/jquery-3.4.1.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+<script src="/js/includeHTML.js"></script>
+<script src="/js/nav.js"></script>
+<script>
+$(document).ready(function() {
+	includeHTML();
+});
+
+function menuClick(url) {
+	if (url == '/') {
+		location.reload(true);
+		return;
+	}
+
+	$.ajax({
+		type : 'POST',
+		url : url,
+		async : true,
+		dataType : 'html',
+		success : function(data) {
+			// container romove
+			$('#container').children().remove();
+			// container replace
+			$('#container').html(data);
+		},
+		error : function(request, status, error) {
+			alert('error');
+		}
+	});
+}
+</script>
+<!-- style -->
+<style>
+#img_profile {
+	width: 350px;
+	height: 350px;
+}
+</style>
+</head>
+<body>
+	<nav include-html="/html/nav.html"></nav>
+	
+	<!-- switch container -->
+	<div id="container">
+		<!-- main content -->
+		<div class="container-fluid text-center bg-main">
+			<img src="image/main_logo.png" id="img_profile">
+			<p class="main">ようこそ！</p>
+			<p class="main">KICOシステムズの購買情報システムです。</p>
+		</div>
+	</div>
+
+	<footer include-html="/html/footer.html"></footer>
+</body>
+</html>

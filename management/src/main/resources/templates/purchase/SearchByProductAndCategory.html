@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>SearchByProductAndCategoryPage</title>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"
+	integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ=="
+	crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css?family=Montserrat"
+	rel="stylesheet">
+<link rel="stylesheet" href="/css/article.css" type="text/css">
+<script src='js/jquery-3.4.1.js'></script>
+<script>
+function searchProductName() {
+	$('#Result').html('');
+	$('#searchResult').html('');
+
+	var productID = $('#productID').val();
+	var language = $('#language').val();
+	
+	if(productID.length == 0){
+		$('#searchResult').html('商品IDを入力してください!');
+		return false;
+	}
+
+	$.ajax({
+		url : 'searchByProductID',
+		type : 'POST',
+		data : {
+			productID : productID,
+			language : language
+		},
+		dataType : 'JSON',
+		success : outSearchData,
+		error : function(e) {
+			$('#Result').html('検索結果');
+			$('#searchResult').html('検索結果がありません。');
+		}
+	});
+}
+
+function outSearchData(json) {
+
+	if (json.length == 0) {
+		$('#Result').html('検索結果');
+		$('#searchResult').html('検索結果がありません。');
+		return false;
+	}
+
+	var str = '<table class="table table-bordered table-striped table-hover" style="text-align: center;">';
+	str += '<tr><td width="25%">product_id</td>';
+	str += '<td width="25%">product_name</td>';
+	str += '<td width="50%">category_name</td></tr>';
+
+	str += '<tr class="danger">';
+	str += '<td>' + json.product_ID + '</td>';
+	str += '<td>' + json.product_NAME + '</td>';
+	str += '<td>' + json.category_NAME + '</td>';
+	str += '</tr>';
+	str += '</table>';
+
+	$('#Result').html('検索結果');
+	$('#searchResult').html(str);
+}
+</script>
+<style>
+#productNameLabel {
+	display: inline-block;
+	padding: .5em .75em;
+	color: #fff;
+	font-size: inherit;
+	line-height: normal;
+	vertical-align: middle;
+	background-color: #FC7D01;
+	cursor: pointer;
+	border: 1px solid #ebebeb;
+	border-bottom-color: #e2e2e2;
+	border-radius: .25em;
+}
+</style>
+</head>
+<body>
+	<div class='container-fluid text-center bg-main'>
+		<p class='main'>商品名・カテゴリー名検索</p>
+		<table class="table table-hover" style="text-align: center;">
+		<tr><td style="width: 350px;"></td><td width="100px" style="vertical-align: middle;">
+			<a>商品ID</a></td> <td width="500px" style="vertical-align: middle;"><input id='productID'
+				style='width: 400px; display: inline;'></td><td></td></tr> <tr><td></td><td style="vertical-align: middle;"><a>言語</a></td> <td style="vertical-align: middle;"><select
+				id="language" style="width: 400px">
+				<option value="ja" selected="selected">ja</option>
+				<option value="en">en</option>
+			</select></td> <td style="text-align: left;"><label for='userNameSearch' id='productNameLabel'>検索</label> <input
+				type='button' id='userNameSearch' onclick='searchProductName()'
+				style='display: none;'></td></tr>
+		</table>
+		<div id="Result"></div>
+		<div class="container" id="searchResult"
+			style="width: 600px; height: auto; margin: auto;"></div>
+	</div>
+</body>
+</html>

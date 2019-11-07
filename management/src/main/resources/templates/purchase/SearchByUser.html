@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='UTF-8'>
+<title>SearchByUserPage</title>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"
+	integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ=="
+	crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css?family=Montserrat"
+	rel="stylesheet">
+<link rel="stylesheet" href="/css/article.css" type="text/css">
+<script src='js/jquery-3.4.1.js'></script>
+<script>
+function searchByUserName() {
+	$('#Result').html('');
+	$('#searchResult').html('');
+
+	var name = $('#userName').val();
+	
+	if(name.length == 0){
+		$('#searchResult').html('ユーザ名（姓）を入力してください!');
+		return false;
+	}
+
+	$.ajax({
+		url : 'searchByUserName',
+		type : 'POST',
+		data : {
+			lastName : name
+		},
+		dataType : 'JSON',
+		success : outSearchData,
+		error : function(e) {
+			$('#Result').html('検索結果');
+			$('#searchResult').html('検索結果がありません。');
+		}
+	});
+}
+
+function outSearchData(json) {
+	
+	if(json.length == 0){
+		$('#Result').html('検索結果');
+		$('#searchResult').html('検索結果がありません。');
+		return false;
+	}	
+	
+	var str = '<table class="table table-bordered table-striped table-hover">';
+	str += '<tr><td width="300px">product_id</td>';
+	str += '<td width="300px">create_user</td>';
+	str += '<td width="1500px">create_time</td></tr>';
+
+	$.each(json, function(key, item) {
+		str += (key % 3 == 1 ? "" : '<tr class="info">');
+		str += (key % 3 == 2 ? "" : '<tr class="active">');
+		str += (key % 2 == 0 ? "" : '<tr class="danger">');
+		str += '<td>' + item.product_ID + '</td>';
+		str += '<td>' + item.create_USER + '</td>';
+		str += '<td>' + item.create_TIME + '</td>';
+		str += (key % 3 == 0 ? "" : '</tr>');
+	});
+	str += '</table>';
+
+	$('#Result').html('検索結果');
+
+	$('#searchResult').html(str);
+}
+</script>
+<style>
+#userNameLabel {
+	display: inline-block;
+	padding: .5em .75em;
+	color: #fff;
+	font-size: inherit;
+	line-height: normal;
+	vertical-align: middle;
+	background-color: #FC7D01;
+	cursor: pointer;
+	border: 1px solid #ebebeb;
+	border-bottom-color: #e2e2e2;
+	border-radius: .25em;
+}
+</style>
+</head>
+<body>
+	<div class='container-fluid text-center bg-main' style="height: 200%">
+		<p class='main'>ユーザ別検索</p>
+		<div class='form-group' style='margin: 8px 0 8px;'>
+			<a>ユーザ名（姓）</a> <input id='userName' class='form-control'
+				style='width: 30%; display: inline;'> <label
+				for='userNameSearch' id='userNameLabel'>検索</label> <input
+				type='button' id='userNameSearch' onclick='searchByUserName()'
+				style='display: none;'>
+		</div>
+		<div id="Result"></div>
+		<div class="container" id="searchResult"
+			style="width: 600px; height: auto; margin: auto;"></div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='UTF-8'>
+<title>FileUploadPage</title>
+<link rel="stylesheet" href="/css/article.css" type="text/css">
+<script src='js/jquery-3.4.1.js'></script>
+<script>
+function fileUp() {
+	output.innerText = "";
+	errorFile.innerText = "";
+	errorFileContent.innerText = "";
+	
+	var filePath = $('#fileUpload').val();
+	var fileName = document.getElementById('fileUpload').files[0].name;
+	
+	var lastDot = filePath.lastIndexOf('.');
+	
+	var fileExt = filePath.substring(lastDot + 1, filePath.length).toLowerCase();
+	
+	if(!(fileExt == 'txt' || fileExt == 'csv' || fileExt == 'tsv')){
+		output.innerText = 'ファイルの拡張子を確認してください。'
+		return false;
+	}
+	
+	var reader = new FileReader();
+	reader.readAsText(event.target.files[0], 'shift-jis');
+	
+	$('#fileName').val(fileName);
+
+	$.ajax({
+		url : 'InsertFile',
+		type : 'POST',
+		data : {
+			filePath : filePath
+		},
+		dataType : 'HTML',
+		success : function(msg) {
+
+			if (msg == '') {
+				output.innerText = 'アップロードを成功しました。';
+			} else {
+				output.innerHTML = 'アップロードを失敗しました。' + '<br>' + 'エラーメッセージ : ' + msg;
+				errorFile.innerText = "「エラーファイルの内容」";
+				errorFileContent.innerText = reader.result;
+			}
+		},
+		error : function(msg) {
+			output.innerHTML = 'アップロードを失敗しました。' + '<br>' + 'エラーメッセージ : ' + msg;
+			errorFile.innerText = "「エラーファイルの内容」";
+			errorFileContent.innerText = reader.result;
+		}
+	});	
+}
+</script>
+<style>
+#fileUpLabel {
+	display: inline-block;
+	padding: .5em .75em;
+	color: #ffffff;
+	font-size: inherit;
+	line-height: normal;
+	vertical-align: middle;
+	background-color: #FC7D01;
+	cursor: pointer;
+	border: 1px solid #ebebeb;
+	border-bottom-color: #e2e2e2;
+	border-radius: .25em;
+}
+</style>
+</head>
+<body>
+	<div class='container-fluid text-center bg-main'>
+		<p class='main'>ファイルアップロード</p>
+		<div class='form-group' style='margin: 8px 0 8px;'>
+			<a>ファイル名</a> <input id='fileName' class='form-control'
+				value='参照をクリックしてください。' disabled='disabled'
+				style='width: 50%; display: inline;'> <label
+				for='fileUpload' id='fileUpLabel'>参照</label> <input type='file'
+				id='fileUpload' onchange='fileUp()' style='display: none;'>
+		</div>
+		<div id='output'></div>
+		<div id='errorFile'></div>
+		<div id='errorFileContent'></div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>nav</title>
+</head>
+<body>
+	<div id="mySidenav" class="sidenav">
+		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+		<a href="javascript:menuClick('/')" onclick="closeNav()">ホーム</a>
+		<a href="javascript:menuClick('FileUploadView')" onclick="closeNav()">ファイルアップロード</a>
+		<a href="javascript:menuClick('CalculateByCategoryView')"
+			onclick="closeNav()">カテゴリ別総計</a> <a
+			href="javascript:menuClick('SearchByUserView')" onclick="closeNav()">ユーザ別検索</a>
+		<a href="javascript:menuClick('SearchByProductAndCategoryView')"
+			onclick="closeNav()">商品名・カテゴリー名検索</a>
+	</div>
+	<span style="font-size: 30px; cursor: pointer;" onclick="openNav()">&#9776;
+		open</span>
+</body>
+</html>
